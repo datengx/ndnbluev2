@@ -40,6 +40,8 @@
 #include "mgmt/general-config-section.hpp"
 #include "mgmt/tables-config-section.hpp"
 
+#include <iostream>
+
 namespace nfd {
 
 NFD_LOG_INIT("Nfd");
@@ -164,14 +166,18 @@ Nfd::initializeManagement()
   tablesConfig.setConfigFile(config);
 
   m_authenticator->setConfigFile(config);
+  // set configuration file of the face manager
   m_faceManager->setConfigFile(config);
 
   // parse config file
   if (!m_configFile.empty()) {
+    //@@ 
+    std::cout << "m_configFile not empty: " << m_configFile << std::endl;
     config.parse(m_configFile, true);
     config.parse(m_configFile, false);
   }
   else {
+    std::cout << "m_configFile is empty" << std::endl;
     config.parse(m_configSection, true, INTERNAL_CONFIG);
     config.parse(m_configSection, false, INTERNAL_CONFIG);
   }

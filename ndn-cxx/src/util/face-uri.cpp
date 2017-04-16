@@ -35,6 +35,8 @@
 #include <boost/regex.hpp>
 #include <set>
 
+#include <iostream>
+
 namespace ndn {
 namespace util {
 
@@ -95,6 +97,9 @@ FaceUri::parse(const std::string& uri)
         boost::regex_match(authority, match, etherExp) ||
         boost::regex_match(authority, match, v4MappedV6Exp) ||
         boost::regex_match(authority, match, v4HostExp)) {
+      if (m_scheme.compare("blue")) {
+        
+      }
       m_host = match[1];
       m_port = match[2];
     }

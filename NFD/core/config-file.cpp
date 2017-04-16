@@ -116,6 +116,12 @@ ConfigFile::parse(std::istream& input, bool isDryRun, const std::string& filenam
     BOOST_THROW_EXCEPTION(Error(msg.str()));
   }
 
+  // Plot what's in the m_global
+  // std::cout << "@@@@@ m_global: " << std::endl;
+  // for (const auto& i : m_global) {
+  //   std::cout << i.first << std::endl;
+  // }
+
   process(isDryRun, filename);
 }
 

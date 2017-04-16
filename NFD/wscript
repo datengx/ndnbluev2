@@ -196,6 +196,8 @@ def build(bld):
     else:
         core.source += bld.path.ant_glob(['core/logger*.cpp'])
 
+    # Include all the source in the daemon folder
+    # excl(ude) couple files related to ethernet/unix/websocket
     nfd_objects = bld(
         target='daemon-objects',
         name='daemon-objects',

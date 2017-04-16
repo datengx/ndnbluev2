@@ -27,6 +27,7 @@
 #include "protocol-factory.hpp"
 #include "core/logger.hpp"
 #include "fw/face-table.hpp"
+#include <iostream>
 
 namespace nfd {
 namespace face {
@@ -37,7 +38,7 @@ FaceSystem::FaceSystem(FaceTable& faceTable)
   : m_faceTable(faceTable)
 {
   for (const std::string& id : ProtocolFactory::listRegistered()) {
-    NFD_LOG_TRACE("creating factory " << id);
+    std::cout << "creating factory " << id << std::endl;
     m_factories[id] = ProtocolFactory::create(id);
   }
 }
@@ -84,7 +85,14 @@ FaceSystem::processConfig(const ConfigSection& configSection, bool isDryRun, con
 
   // process sections in protocol factories
   for (const auto& pair : m_factories) {
+    // @@
+    if (pair.first == "bluetooth") {
+        // skip for now
+        continue;
+    }
+
     const std::string& sectionName = pair.first;
+    std::cout << "@@@@ m_factories[..].keys: " << sectionName << std::endl;
     ProtocolFactory* factory = pair.second.get();
 
     std::set<std::string> oldProvidedSchemes = factory->getProvidedSchemes();
