@@ -106,6 +106,7 @@ void
 ConfigFile::parse(std::istream& input, bool isDryRun, const std::string& filename)
 {
   try {
+    // read info in a stream and translate into a property tree
     boost::property_tree::read_info(input, m_global);
   }
   catch (const boost::property_tree::info_parser_error& error) {
@@ -115,13 +116,21 @@ ConfigFile::parse(std::istream& input, bool isDryRun, const std::string& filenam
     msg << " " << error.message() << " line " << error.line();
     BOOST_THROW_EXCEPTION(Error(msg.str()));
   }
-
+  // @@
   // Plot what's in the m_global
+  // general
+  // log
+  // tables
+  // face_system
+  // authorizations
+  // rib
+
   // std::cout << "@@@@@ m_global: " << std::endl;
   // for (const auto& i : m_global) {
   //   std::cout << i.first << std::endl;
   // }
 
+  // @@ Start processing the configFiles
   process(isDryRun, filename);
 }
 

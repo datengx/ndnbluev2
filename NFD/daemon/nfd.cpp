@@ -169,9 +169,15 @@ Nfd::initializeManagement()
   // set configuration file of the face manager
   m_faceManager->setConfigFile(config);
 
+
+  // m_configFile is holding the string containing the path to the
+  // actual confuguration file (default /usr/local/etc/ndn/nfd.conf)
+  // config.parse() will start parsing it using all the parser you
+  // have setup through passing the config object to the different
+  // instances (e.g. m_faceManager, m_fibManager)
   // parse config file
   if (!m_configFile.empty()) {
-    //@@ 
+    //@@
     std::cout << "m_configFile not empty: " << m_configFile << std::endl;
     config.parse(m_configFile, true);
     config.parse(m_configFile, false);
