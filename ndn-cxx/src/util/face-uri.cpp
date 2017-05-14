@@ -43,7 +43,7 @@ namespace util {
 BOOST_CONCEPT_ASSERT((boost::EqualityComparable<FaceUri>));
 
 FaceUri::FaceUri()
-  : m_isV6(false)
+  : m_isV6(false), m_isBt(false)
 {
 }
 
@@ -67,6 +67,7 @@ FaceUri::parse(const std::string& uri)
   m_port.clear();
   m_path.clear();
   m_isV6 = false;
+  m_isBt = false;
 
   static const boost::regex protocolExp("(\\w+\\d?(\\+\\w+)?)://([^/]*)(\\/[^?]*)?");
   // String match
@@ -86,6 +87,28 @@ FaceUri::parse(const std::string& uri)
   static const boost::regex v4MappedV6Exp("^\\[::ffff:(\\d+(?:\\.\\d+){3})\\](?:\\:(\\d+))?$");
   // pattern for IPv4/hostname/fd/ifname, with optional port number
   static const boost::regex v4HostExp("^([^:]+)(?:\\:(\\d+))?$");
+  // pattern for Bluetooth address in standard hex-digits-and-colons notation
+  static const boost::regex btExp("^\\[((?:[a-fA-F0-9]{1,2}\\:){5}(?:[a-fA-F0-9]{1,2}))\\](\\d+)$");
+
+  // bluetooth scheme command
+  if (m_scheme == "bluetooth") {
+    boost::smatch match;
+    m_isBt = boost::regex_match(authority, match, btExp);
+    // is bluetooth scheme
+    if (m_isBt) {
+      m_mac = match[1];
+      m_channel = match[2];
+      if (m_channel.empty()) {
+        // set to default channel value
+        m_channel = "1";
+      }
+      return true;
+    }
+    else {
+      // parse error
+      return false;
+    }
+  }
 
   if (authority.empty()) {
     // UNIX, internal
@@ -97,9 +120,6 @@ FaceUri::parse(const std::string& uri)
         boost::regex_match(authority, match, etherExp) ||
         boost::regex_match(authority, match, v4MappedV6Exp) ||
         boost::regex_match(authority, match, v4HostExp)) {
-      if (m_scheme.compare("blue")) {
-        
-      }
       m_host = match[1];
       m_port = match[2];
     }
@@ -207,6 +227,9 @@ std::ostream&
 operator<<(std::ostream& os, const FaceUri& uri)
 {
   os << uri.m_scheme << "://";
+  if (uri.m_isBt) {
+    os << "[" << uri.m_mac << "]" << uri.m_channel;
+  }
   if (uri.m_isV6) {
     os << "[" << uri.m_host << "]";
   }
@@ -412,6 +435,51 @@ protected:
   }
 };
 
+/** Bluetooth URI canonization functionality
+ *
+ */
+class BluetoothCanonizeProvider : public CanonizeProvider
+{
+public:
+  std::set<std::string>
+  getSchemes() const override
+  {
+    return {"bluetooth"};
+  }
+
+  bool
+  isCanonical(const FaceUri& faceUri) const override
+  {
+    // Currently, if port and path are both empty,
+    // it's canonical
+    if (!faceUri.getPort().empty()) {
+      return false;
+    }
+    if (!faceUri.getPath().empty()) {
+      return false;
+    }
+
+    // TODO: Add real checking
+    return true;
+  }
+
+  void
+  canonize(const FaceUri& faceUri,
+           const FaceUri::CanonizeSuccessCallback onSuccess,
+           const FaceUri::CanonizeFailureCallback onFailure,
+           boost::asio::io_service& io, const time::nanoseconds& timeout) const override
+  {
+    // TODO: validity check correctness of the address_v6
+    if (false) {
+      return onFailure("invalid bluetooth address '" + faceuri.getMac() + "'");
+    }
+
+    // always success for now
+    BOOST_ASSERT(faceUri.isCanonical());
+    onSuccess(faceUri);
+  }
+}
+
 class EtherCanonizeProvider : public CanonizeProvider
 {
 public:
@@ -491,7 +559,8 @@ public:
 using CanonizeProviders = boost::mpl::vector<UdpCanonizeProvider*,
                                              TcpCanonizeProvider*,
                                              EtherCanonizeProvider*,
-                                             UdpDevCanonizeProvider*>;
+                                             UdpDevCanonizeProvider*,
+                                             BluetoothCanonizeProvider*>;
 using CanonizeProviderTable = std::map<std::string, shared_ptr<CanonizeProvider>>;
 
 class CanonizeProviderTableInitializer

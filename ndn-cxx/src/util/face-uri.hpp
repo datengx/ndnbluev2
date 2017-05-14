@@ -140,6 +140,20 @@ public: // getters
     return m_path;
   }
 
+  // get mac address
+  const std::string&
+  getMac() const
+  {
+    return m_mac;
+  }
+
+  // get Bt channel number
+  const std::string&
+  getChannel() const
+  {
+    return m_channel;
+  }
+
   /// write as a string
   std::string
   toString() const;
@@ -189,8 +203,11 @@ private:
   std::string m_host;
   std::string m_port;
   std::string m_path;
+  std::string m_mac;
+  std::string m_channel;
   /// whether to add [] around host when writing string
   bool m_isV6;
+  bool m_isBt;
 
   friend std::ostream& operator<<(std::ostream& os, const FaceUri& uri);
 };
