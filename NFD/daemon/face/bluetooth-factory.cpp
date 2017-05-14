@@ -30,6 +30,8 @@ namespace nfd {
 
 namespace face {
 
+namespace bluetooth = boost::asio::bluetooth;
+
 NFD_LOG_INIT("BluetoothFactory");
 // register factory to be visiable by the face system
 NFD_REGISTER_PROTOCOL_FACTORY(BluetoothFactory);
@@ -44,15 +46,8 @@ BluetoothFactory::getId()
 
 void
 BluetoothFactory::processConfig(OptionalConfigSection configSection,
-                          FaceSystem::ConfigContext& context)
+                                FaceSystem::ConfigContext& context)
 {
-  // tcp
-  // {
-  //   listen yes
-  //   port 6363
-  //   enable_v4 yes
-  //   enable_v6 yes
-  // }
 
 
   // if (!configSection) {
@@ -61,6 +56,25 @@ BluetoothFactory::processConfig(OptionalConfigSection configSection,
   //   }
   //   return;
   // }
+
+  bool wantListen = true;
+  // default channel value
+  uint8_t channel = 1;
+
+  // if not dryrun
+  if (!context.isDryRun) {
+    providedSchemes.insert("bluetooth");
+
+    // create a local endpoint with specified channel
+    bluetooth::Endpoint endpoint(channel);
+    // create a bt channel using the endpoint
+    shared_ptr<BlueChannel> btChannel = this->createChannel(endpoint);
+
+    if (wantListen && !btChannel->isListening()) {
+      //
+      btChannel->listen(context.addFace, nullptr);
+    }
+  }
 
 }
 
@@ -80,12 +94,57 @@ BluetoothFactory::createFace(const FaceUri& uri,
     return;
   }
 
+  bluetooth::Endpoint endpoint(uri.getMac(),
+                               boost::lexical_cast<uint8_t>(uri.getChannel()));
+
+  for (const auto& i : m_channels) {
+    i.second->connect(endpoint, wantLocalFieldsEnabled, onCreated, onFailure);
+    return;
+  }
+
+  NFD_LOG_TRACE("No channels available to connect to " + boost::lexical_cast<std::string>(endpoint));
+  onFailure(504, "No channels available to connect");
+}
+
+shared_ptr<BluetoothChannel>
+BluetoothFactory::createChannel(const bluetooth::Endpoint& endpoint)
+{
+  // If the channel exists, don't create a new one but return it
+  auto channel = findChannel(endpoint);
+  if (channel) {
+    return channel;
+  }
+
+  // Create a new channel
+  channel = make_shared<BluetoothChannel>(endpoint);
+  m_channels[endpoint] = channel;
+
+  NFD_LOG_DEBUG("Channel [" << endpoint << "] created");
+  return channel;
+}
+
+shared_ptr<BluetoothChannel>
+BluetoothFactory::createChannel(const std::string& localMac, const std::string& localChannel)
+{
+  bluetooth::Endpoint endpoint(localMac, boost::lexical_cast<uint8_t>(localChannel));
+  return createChannel(endpoint);
 }
 
 std::vector<shared_ptr<const Channel>>
 BluetoothFactory::getChannels() const
 {
+  return getChannelsFromMap(m_channels);
+}
 
+shared_ptr<BluetoothChannel>
+BluetoothFactory::findChannel(const bluetooth::Endpoint& localEndpoint) const
+{
+
+  auto i = m_channel.find(localEndpoint);
+  if (i != m_channels.end())
+    return i->second;
+  else
+    return nullptr;
 }
 
 } // namespace face

@@ -55,6 +55,10 @@ public: // registry
   {
     Registry& registry = getRegistry();
     BOOST_ASSERT(registry.count(id) == 0);
+    // the function is not called here, instead
+    // the pointer of the function that takes no
+    // argument but generate factory is returned here
+    // so registry[id] is actually holding a function
     registry[id] = &make_unique<PF>;
   }
 

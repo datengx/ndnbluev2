@@ -72,6 +72,11 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/throw_exception.hpp>
 
+// Bluetooth related headers
+#include "asio_bluetooth/bluetooth.hpp"
+#include "asio_bluetooth/basic_endpoint.hpp"
+
+
 namespace nfd {
 
 using std::size_t;

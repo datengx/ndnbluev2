@@ -26,6 +26,7 @@
 #include "command-parser.hpp"
 #include "format-helpers.hpp"
 #include <ndn-cxx/util/logger.hpp>
+#include <iostream>
 
 namespace nfd {
 namespace tools {
@@ -113,6 +114,8 @@ CommandParser::parse(const std::vector<std::string>& tokens, ParseMode mode) con
   const std::string& noun = tokens.size() > 0 ? tokens[0] : "";
   const std::string& verb = tokens.size() > 1 ? tokens[1] : "";
   size_t nameLen = std::min<size_t>(2, tokens.size());
+
+  std::cout << "noun: " << noun << " verb: " << verb << std::endl;
 
   auto i = m_commands.find({noun, verb});
   if (i == m_commands.end()) {

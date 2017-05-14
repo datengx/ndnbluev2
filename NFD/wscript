@@ -69,12 +69,19 @@ def configure(conf):
                'pch', 'boost', 'boost-kqueue', 'dependency-checker', 'websocket',
                'doxygen', 'sphinx_build'])
 
+    # conf.env.append_value('CXXFLAGS', ['-fpermissive'])
+
     conf.find_program('bash', var='BASH')
 
     if 'PKG_CONFIG_PATH' not in os.environ:
         os.environ['PKG_CONFIG_PATH'] = Utils.subst_vars('${LIBDIR}/pkgconfig', conf.env)
     conf.check_cfg(package='libndn-cxx', args=['--cflags', '--libs'],
                    uselib_store='NDN_CXX', mandatory=True)
+
+
+    # @@ ADD BlueZ dependencies
+    conf.check_cfg(package='bluez', args=['--cflags', '--libs'], uselib_store='BLUEZ', manadatory=True)
+    # -----
 
     conf.checkDependency(name='librt', lib='rt', mandatory=False)
     conf.checkDependency(name='libresolv', lib='resolv', mandatory=False)
@@ -162,6 +169,8 @@ main(int, char**)
         conf.define('NDEBUG', 1)
 
     conf.write_config_header('core/config.hpp')
+
+
 
 def build(bld):
     version(bld)

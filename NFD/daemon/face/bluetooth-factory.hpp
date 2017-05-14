@@ -27,18 +27,19 @@
 #define NFD_DAEMON_FACE_BLUETOOTH_FACTORY_HPP
 
 #include "protocol-factory.hpp"
-// #include "bluetooth-channel.hpp"
+#include "bluetooth-channel.hpp"
 
 namespace nfd {
 
 namespace face {
 
-/** \brief
+/** \brief protocol factory for Bluetooth over RFCOMM
  */
 class BluetoothFactory : public ProtocolFactory
 {
 public:
-  static const std::string& getId();
+  static const std::string&
+  getId();
 
   /** \brief process face_system.bluetooth config section
    */
@@ -54,11 +55,24 @@ public:
              const FaceCreationFailedCallback& onFailure) override;
 
 
-  
+  shared_ptr<BluetoothChannel>
+  createChannel(const bluetoothEndpoint& localEndpoint);
+
+  // Create using MAC address and channel number
+  shared_ptr<BluetoothChannel>
+  createChannel(const std::string& localMac, const std::string& localChannel);
+
   std::vector<shared_ptr<const Channel>>
   getChannels() const override;
 
 private:
+
+private:
+  shared_ptr<BluetoothChannel>
+  findChannel(const bluetooth::Endpoint& localEndpoint) const;
+
+private:
+  std::map<bluetooth::Endpoint, shared_ptr<BluetoothChannel>> m_channels;
 
 };
 

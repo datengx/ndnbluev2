@@ -96,6 +96,10 @@ FaceSystem::processConfig(const ConfigSection& configSection, bool isDryRun, con
     ProtocolFactory* factory = pair.second.get();
 
     std::set<std::string> oldProvidedSchemes = factory->getProvidedSchemes();
+    //@@
+    // The tag in the configuration file is only optional.
+    // If the returned is empty, then there is not such node with the
+    // corresponding key.
     factory->processConfig(configSection.get_child_optional(sectionName), context);
 
     if (!isDryRun) {

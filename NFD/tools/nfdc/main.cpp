@@ -26,6 +26,7 @@
 #include "available-commands.hpp"
 #include "help.hpp"
 #include "core/version.hpp"
+#include <iostream>
 
 namespace nfd {
 namespace tools {
@@ -37,6 +38,9 @@ main(int argc, char** argv)
   std::vector<std::string> args(argv + 1, argv + argc);
 
   CommandParser parser;
+
+  // @@ Start by registering command to the command parser
+  // basically tells it which command is available
   registerCommands(parser);
 
   if (args.empty() || args[0] == "-h") {
@@ -52,13 +56,22 @@ main(int argc, char** argv)
   std::string noun, verb;
   CommandArguments ca;
   ExecuteCommand execute;
+
+  // @@@ tie the parser
+  std::cout << "@@@ tie the parser" << std::endl;
+
   try {
+    // binding the tuple of objects to the variable listed in the std::tie(...)
+    // in the SAME ORDER
     std::tie(noun, verb, ca, execute) = parser.parse(args, ParseMode::ONE_SHOT);
   }
   catch (const std::invalid_argument& e) {
     std::cerr << e.what() << std::endl;
     return 2;
   }
+
+  // @@@ execute the command
+  std::cout << "@@@ execute the command" << std::endl;
 
   try {
     Face face;
