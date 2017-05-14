@@ -87,8 +87,8 @@ FaceSystem::processConfig(const ConfigSection& configSection, bool isDryRun, con
   for (const auto& pair : m_factories) {
     // @@
     if (pair.first == "bluetooth") {
-        // skip for now
-        continue;
+        // uncomment the following line to skip for now
+        //continue;
     }
 
     const std::string& sectionName = pair.first;

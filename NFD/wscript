@@ -216,7 +216,7 @@ def build(bld):
                                        'daemon/face/unix-*.cpp',
                                        'daemon/face/websocket-*.cpp',
                                        'daemon/main.cpp']),
-        use='core-objects WEBSOCKET',
+        use='core-objects WEBSOCKET BLUEZ',
         includes='daemon',
         export_includes='daemon')
 

@@ -61,14 +61,16 @@ BluetoothFactory::processConfig(OptionalConfigSection configSection,
   // default channel value
   uint8_t channel = 1;
 
+  // TODO: load config file
+
   // if not dryrun
   if (!context.isDryRun) {
     providedSchemes.insert("bluetooth");
 
     // create a local endpoint with specified channel
-    bluetooth::Endpoint endpoint(channel);
+    boost::asio::bluetooth::bluetooth::endpoint endpoint(channel);
     // create a bt channel using the endpoint
-    shared_ptr<BlueChannel> btChannel = this->createChannel(endpoint);
+    shared_ptr<BluetoothChannel> btChannel = this->createChannel(endpoint);
 
     if (wantListen && !btChannel->isListening()) {
       //
@@ -94,8 +96,8 @@ BluetoothFactory::createFace(const FaceUri& uri,
     return;
   }
 
-  bluetooth::Endpoint endpoint(uri.getMac(),
-                               boost::lexical_cast<uint8_t>(uri.getChannel()));
+  boost::asio::bluetooth::bluetooth::endpoint endpoint(uri.getMac(),
+                               (uint8_t)boost::lexical_cast<int>(uri.getChannel()));
 
   for (const auto& i : m_channels) {
     i.second->connect(endpoint, wantLocalFieldsEnabled, onCreated, onFailure);
@@ -107,7 +109,7 @@ BluetoothFactory::createFace(const FaceUri& uri,
 }
 
 shared_ptr<BluetoothChannel>
-BluetoothFactory::createChannel(const bluetooth::Endpoint& endpoint)
+BluetoothFactory::createChannel(const boost::asio::bluetooth::bluetooth::endpoint& endpoint)
 {
   // If the channel exists, don't create a new one but return it
   auto channel = findChannel(endpoint);
@@ -126,7 +128,7 @@ BluetoothFactory::createChannel(const bluetooth::Endpoint& endpoint)
 shared_ptr<BluetoothChannel>
 BluetoothFactory::createChannel(const std::string& localMac, const std::string& localChannel)
 {
-  bluetooth::Endpoint endpoint(localMac, boost::lexical_cast<uint8_t>(localChannel));
+  boost::asio::bluetooth::bluetooth::endpoint endpoint(localMac, (uint8_t)boost::lexical_cast<int>(localChannel));
   return createChannel(endpoint);
 }
 
@@ -137,10 +139,10 @@ BluetoothFactory::getChannels() const
 }
 
 shared_ptr<BluetoothChannel>
-BluetoothFactory::findChannel(const bluetooth::Endpoint& localEndpoint) const
+BluetoothFactory::findChannel(const boost::asio::bluetooth::bluetooth::endpoint& localEndpoint) const
 {
 
-  auto i = m_channel.find(localEndpoint);
+  auto i = m_channels.find(localEndpoint);
   if (i != m_channels.end())
     return i->second;
   else

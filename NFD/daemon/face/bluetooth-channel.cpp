@@ -2,14 +2,15 @@
 #include "generic-link-service.hpp"
 #include "bluetooth-transport.hpp"
 #include "core/global-io.hpp"
+#include <iostream>
 
 namespace nfd {
 
 NFD_LOG_INIT("BluetoothChannel");
 
-namespace bluetooth = boost::bluetooth;
+//namespace bluetooth = boost::asio::bluetooth;
 
-BluetoothChannel::BluetoothChannel(const bluetooth::Endpoint& localEndpoint)
+BluetoothChannel::BluetoothChannel(const boost::asio::bluetooth::bluetooth::endpoint& localEndpoint)
   : m_localEndpoint(localEndpoint)
   , m_acceptor(getGlobalIoService())
   , m_acceptSocket(getGlobalIoService())
@@ -19,6 +20,7 @@ BluetoothChannel::BluetoothChannel(const bluetooth::Endpoint& localEndpoint)
   setUri(FaceUri(m_localEndpoint));
 }
 
+void
 BluetoothChannel::listen(const FaceCreatedCallback& onFaceCreated,
                          const FaceCreationFailedCallback& onAcceptFailed,
                          int backlog/* = bluetooth::acceptor::max_connections*/)
@@ -30,7 +32,7 @@ BluetoothChannel::listen(const FaceCreatedCallback& onFaceCreated,
   }
 
   m_acceptor.open(m_localEndpoint.protocol());
-  m_acceptor.set_option(bluetooth::bluetooth::acceptor::reuse_address(true));
+  m_acceptor.set_option(boost::asio::bluetooth::bluetooth::acceptor::reuse_address(true));
 
   m_acceptor.bind(m_localEndpoint);
   m_acceptor.listen(backlog);
@@ -40,7 +42,7 @@ BluetoothChannel::listen(const FaceCreatedCallback& onFaceCreated,
 }
 
 void
-BluetoothChannel::connect(const bluetooth::Endpoint& remoteEndpoint,
+BluetoothChannel::connect(const boost::asio::bluetooth::bluetooth::endpoint& remoteEndpoint,
                     bool wantLocalFieldsEnabled,
                     const FaceCreatedCallback& onFaceCreated,
                     const FaceCreationFailedCallback& onConnectFailed,
@@ -52,10 +54,12 @@ BluetoothChannel::connect(const bluetooth::Endpoint& remoteEndpoint,
     return;
   }
 
-  auto clientSocket = make_shared<bluetooth::bluetooth::socket>(ref(getGlobalIoService()));
+  auto clientSocket = make_shared<boost::asio::bluetooth::bluetooth::socket>(ref(getGlobalIoService()));
 
   scheduler::EventId connectTimeoutEvent = scheduler::schedule(timeout,
     bind(&BluetoothChannel::handleConnectTimeout, this, clientSocket, onConnectFailed));
+
+  std::cout << "remoteEndpoint.address(): " << remoteEndpoint.address() << " channel: " << (int)remoteEndpoint.channel() << std::endl;
 
   clientSocket->async_connect(remoteEndpoint,
                               bind(&BluetoothChannel::handleConnect, this,
@@ -71,13 +75,13 @@ BluetoothChannel::size() const
 }
 
 void
-BluetoothChannel::createFace(bluetooth::bluetooth::socket&& socket,
+BluetoothChannel::createFace(boost::asio::bluetooth::bluetooth::socket&& socket,
                        bool isOnDemand,
                        bool wantLocalFieldsEnabled,
                        const FaceCreatedCallback& onFaceCreated)
 {
   shared_ptr<Face> face;
-  bluetooth::Endpoint remoteEndpoint = socket.remote_endpoint();
+  boost::asio::bluetooth::bluetooth::endpoint remoteEndpoint = socket.remote_endpoint();
 
   auto it = m_channelFaces.find(remoteEndpoint);
   if (it == m_channelFaces.end()) {
@@ -107,7 +111,7 @@ BluetoothChannel::createFace(bluetooth::bluetooth::socket&& socket,
 
     boost::system::error_code error;
     // @@ can both be shutdown
-    socket.shutdown(bluetooth::bluetooth::socket::shutdown_both, error);
+    socket.shutdown(boost::asio::bluetooth::bluetooth::socket::shutdown_both, error);
     socket.close(error);
   }
 
@@ -151,7 +155,7 @@ BluetoothChannel::handleAccept(const boost::system::error_code& error,
 
 void
 BluetoothChannel::handleConnect(const boost::system::error_code& error,
-                                const shared_ptr<bluetooth::bluetooth::socket>& socket,
+                                const shared_ptr<boost::asio::bluetooth::bluetooth::socket>& socket,
                                 bool wantLocalFieldsEnabled,
                                 const scheduler::EventId& connectTimeoutEvent,
                                 const FaceCreatedCallback& onFaceCreated,
@@ -187,7 +191,7 @@ BluetoothChannel::handleConnect(const boost::system::error_code& error,
 
 
 void
-BluetoothChannel::handleConnectTimeout(const shared_ptr<bluetooth::bluetooth::socket>& socket,
+BluetoothChannel::handleConnectTimeout(const shared_ptr<boost::asio::bluetooth::bluetooth::socket>& socket,
                                        const FaceCreationFailedCallback& onConnectFailed)
 {
   NFD_LOG_DEBUG("Connect to remote endpoint timed out");

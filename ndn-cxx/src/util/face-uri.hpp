@@ -34,6 +34,8 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ip/udp.hpp>
 #include <boost/asio/local/stream_protocol.hpp>
+#include "../../../NFD/asio_bluetooth/bluetooth.hpp"
+#include "../../../NFD/asio_bluetooth/basic_endpoint.hpp"
 
 namespace ndn {
 namespace util {
@@ -85,6 +87,10 @@ public: // scheme-specific construction
   /// construct tcp4 or tcp6 canonical FaceUri
   explicit
   FaceUri(const boost::asio::ip::tcp::endpoint& endpoint);
+
+  /// construct bluetooth endpoint
+  explicit
+  FaceUri(const boost::asio::bluetooth::bluetooth::endpoint& endpoint);
 
   /// construct tcp canonical FaceUri with custom scheme
   FaceUri(const boost::asio::ip::tcp::endpoint& endpoint, const std::string& scheme);

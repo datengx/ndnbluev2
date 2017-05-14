@@ -126,6 +126,49 @@ public:
     return impl_.channel();
   }
 
+  /// Compare two endpoints for equality.
+  friend bool operator==(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return e1.impl_ == e2.impl_;
+  }
+
+  /// Compare two endpoints for inequality.
+  friend bool operator!=(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return !(e1.impl_ == e2.impl_);
+  }
+
+  /// Compare endpoints for ordering.
+  friend bool operator<(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return e1.impl_ < e2.impl_;
+  }
+
+  /// Compare endpoints for ordering.
+  friend bool operator>(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return e2.impl_ < e1.impl_;
+  }
+
+  /// Compare endpoints for ordering.
+  friend bool operator<=(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return !(e2 < e1);
+  }
+
+  /// Compare endpoints for ordering.
+  friend bool operator>=(const basic_endpoint<Protocol>& e1,
+      const basic_endpoint<Protocol>& e2)
+  {
+    return !(e1 < e2);
+  }
+
+
 private:
   // underlying bluetooth endpoint
   boost::asio::bluetooth::detail::endpoint impl_;
@@ -138,7 +181,7 @@ std::basic_ostream<Elem, Traits>& operator<<(
   std::basic_ostream<Elem, Traits>& os,
   const basic_endpoint<Procotol>& endpoint)
 {
-  os << "[" + endpoint.address() "]" + std::to_string(endpoint.channel());
+  os << "[" + endpoint.address() + "]" + std::to_string(endpoint.channel());
   return os;
 }
 

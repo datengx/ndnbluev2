@@ -19,7 +19,7 @@ public:
 
 protected:
   bool
-  canChangePersistencyToImpl(ndn::nfd::FacePersistency new Persistency) const final;
+  canChangePersistencyToImpl(ndn::nfd::FacePersistency newPersistency) const final;
 
   void
   afterChangePersistency(ndn::nfd::FacePersistency oldPersistency) final;
@@ -38,7 +38,7 @@ PROTECTED_WITH_TESTS_ELSE_PRIVATE:
   handleReconnect(const boost::system::error_code& error);
 
   VIRTUAL_WITH_TESTS void
-  handleConnectTimeout();
+  handleReconnectTimeout();
 
 PUBLIC_WITH_TESTS_ELSE_PRIVATE:
 

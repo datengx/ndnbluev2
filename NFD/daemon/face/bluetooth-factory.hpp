@@ -56,7 +56,7 @@ public:
 
 
   shared_ptr<BluetoothChannel>
-  createChannel(const bluetoothEndpoint& localEndpoint);
+  createChannel(const boost::asio::bluetooth::bluetooth::endpoint& localEndpoint);
 
   // Create using MAC address and channel number
   shared_ptr<BluetoothChannel>
@@ -69,7 +69,7 @@ private:
 
 private:
   shared_ptr<BluetoothChannel>
-  findChannel(const bluetooth::Endpoint& localEndpoint) const;
+  findChannel(const boost::asio::bluetooth::bluetooth::endpoint& localEndpoint) const;
 
 private:
   std::map<bluetooth::Endpoint, shared_ptr<BluetoothChannel>> m_channels;

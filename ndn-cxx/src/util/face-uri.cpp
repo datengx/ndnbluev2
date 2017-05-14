@@ -147,6 +147,14 @@ FaceUri::FaceUri(const boost::asio::ip::tcp::endpoint& endpoint)
   m_port = to_string(endpoint.port());
 }
 
+FaceUri::FaceUri(const boost::asio::bluetooth::bluetooth::endpoint& endpoint)
+{
+  m_isBt = true;
+  m_scheme = "bluetooth";
+  m_mac = endpoint.address();
+  m_channel = std::to_string(endpoint.channel());
+}
+
 FaceUri::FaceUri(const boost::asio::ip::tcp::endpoint& endpoint, const std::string& scheme)
 {
   m_isV6 = endpoint.address().is_v6();

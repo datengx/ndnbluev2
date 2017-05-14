@@ -127,6 +127,11 @@ main(int, char**)
     else:
         conf.env['WITH_OSX_KEYCHAIN'] = False
 
+
+    # @@ ADD BlueZ dependencies
+    conf.check_cfg(package='bluez', args=['--cflags', '--libs'], uselib_store='BLUEZ', manadatory=True)
+    # -----
+
     # Loading "late" to prevent tests to be compiled with profiling flags
     conf.load('coverage')
 

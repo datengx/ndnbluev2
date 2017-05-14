@@ -110,6 +110,7 @@ class GccBasicFlags(CompilerFlags):
                               '-Wno-unused-parameter',
                               '-Wno-error=maybe-uninitialized', # Bug #1615
                               '-Wno-error=deprecated-declarations', # Bug #3795
+                              '-fpermissive',
                               ]
         return flags
 
@@ -122,6 +123,7 @@ class GccBasicFlags(CompilerFlags):
                               '-Wextra',
                               '-Wnon-virtual-dtor',
                               '-Wno-unused-parameter',
+                              '-fpermissive',
                               ]
         return flags
 
@@ -144,6 +146,7 @@ class GccFlags(GccBasicFlags):
             flags['CXXFLAGS'] += ['-Wno-missing-field-initializers']
         flags['CXXFLAGS'] += ['-Og', # gcc >= 4.8
                               '-fdiagnostics-color', # gcc >= 4.9
+                              '-fpermissive',
                               ]
         return flags
 

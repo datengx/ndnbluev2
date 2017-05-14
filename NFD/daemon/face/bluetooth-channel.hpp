@@ -17,7 +17,7 @@ public:
   /** \brief Create Bluetooth Channel for the local endpoint
    */
   explicit
-  BluetoothChannel(const bluetooth::Endpoint& localEndpoint);
+  BluetoothChannel(const boost::asio::bluetooth::bluetooth::endpoint& localEndpoint);
 
   /** \brief Enable listening on the local endpoint, accept connections,
    *         and create faces when remote host makes a connection
@@ -38,7 +38,7 @@ public:
    * \brief Create a face by establishing connection to remote endpoint
    */
   void
-  connect(const bluetooth::Endpoint& remoteEndpoint,
+  connect(const boost::asio::bluetooth::bluetooth::endpoint& remoteEndpoint,
           bool wantLocalFieldsEnabled,
           const FaceCreatedCallback& onFaceCreated,
           const FaceCreationFailedCallback& onConnectFailed,
@@ -83,9 +83,9 @@ private:
 
 
 private:
-  std::map<bluetooth::Endpoint, shared_ptr<Face>> m_channelFaces;
+  std::map<boost::asio::bluetooth::bluetooth::endpoint, shared_ptr<Face>> m_channelFaces;
 
-  bluetooth::Endpoint m_localEndpoint;
+  boost::asio::bluetooth::bluetooth::endpoint m_localEndpoint;
   boost::asio::bluetooth::bluetooth::acceptor m_acceptor;
   boost::asio::bluetooth::bluetooth::socket m_acceptSocket;
 };

@@ -6,7 +6,7 @@ namespace face {
 
 NFD_LOG_INCLASS_TEMPLATE_SPECIALIZATION_DEFINE(StreamTransport, BluetoothTransport::protocol, "BluetoothTransport");
 
-time::milliseconds BluetoothTransport::s_initialReconnectWait = time::second(1);
+time::milliseconds BluetoothTransport::s_initialReconnectWait = time::seconds(1);
 time::milliseconds BluetoothTransport::s_maxReconnectWait = time::minutes(5);
 // exponential backoff
 float BluetoothTransport::s_reconnectWaitMultiplier = 2.0f;
@@ -29,7 +29,7 @@ BluetoothTransport::BluetoothTransport(protocol::socket&& socket, ndn::nfd::Face
 }
 
 bool
-BluetoothTransport::canChangePersistencyToImpl(ndn::nfd::FacePersistency newPersistency)
+BluetoothTransport::canChangePersistencyToImpl(ndn::nfd::FacePersistency newPersistency) const
 {
   return true;
 }
