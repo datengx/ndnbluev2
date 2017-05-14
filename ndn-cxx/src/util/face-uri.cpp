@@ -235,11 +235,11 @@ std::ostream&
 operator<<(std::ostream& os, const FaceUri& uri)
 {
   os << uri.m_scheme << "://";
-  if (uri.m_isBt) {
-    os << "[" << uri.m_mac << "]" << uri.m_channel;
-  }
   if (uri.m_isV6) {
     os << "[" << uri.m_host << "]";
+  }
+  else if (uri.m_isBt) {
+    os << "[" << uri.m_mac << "]" << uri.m_channel;
   }
   else {
     os << uri.m_host;

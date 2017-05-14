@@ -92,7 +92,7 @@ FaceSystem::processConfig(const ConfigSection& configSection, bool isDryRun, con
     }
 
     const std::string& sectionName = pair.first;
-    std::cout << "@@@@ m_factories[..].keys: " << sectionName << std::endl;
+    // std::cout << "@@@@ m_factories[..].keys: " << sectionName << std::endl;
     ProtocolFactory* factory = pair.second.get();
 
     std::set<std::string> oldProvidedSchemes = factory->getProvidedSchemes();

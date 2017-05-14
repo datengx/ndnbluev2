@@ -128,7 +128,7 @@ public:
   {
     return e1.address() < e2.address();
   }
-
+  
 
   // Set the underlying size of the endpoint in the native type
   void resize(std::size_t new_size)
