@@ -32,7 +32,7 @@ BluetoothChannel::listen(const FaceCreatedCallback& onFaceCreated,
   }
 
   m_acceptor.open(m_localEndpoint.protocol());
-  m_acceptor.set_option(boost::asio::bluetooth::bluetooth::acceptor::reuse_address(true));
+  // m_acceptor.set_option(boost::asio::bluetooth::bluetooth::acceptor::reuse_address(true));
 
   m_acceptor.bind(m_localEndpoint);
   m_acceptor.listen(backlog);
@@ -82,6 +82,8 @@ BluetoothChannel::createFace(boost::asio::bluetooth::bluetooth::socket&& socket,
 {
   shared_ptr<Face> face;
   boost::asio::bluetooth::bluetooth::endpoint remoteEndpoint = socket.remote_endpoint();
+  std::cout << "remote endpoint: " << socket.remote_endpoint().address() << std::endl;
+  std::cout << "local endpoint: " << socket.local_endpoint().address() << std::endl;
 
   auto it = m_channelFaces.find(remoteEndpoint);
   if (it == m_channelFaces.end()) {
