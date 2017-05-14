@@ -465,20 +465,20 @@ public:
 
   void
   canonize(const FaceUri& faceUri,
-           const FaceUri::CanonizeSuccessCallback onSuccess,
-           const FaceUri::CanonizeFailureCallback onFailure,
+           const FaceUri::CanonizeSuccessCallback& onSuccess,
+           const FaceUri::CanonizeFailureCallback& onFailure,
            boost::asio::io_service& io, const time::nanoseconds& timeout) const override
   {
     // TODO: validity check correctness of the address_v6
     if (false) {
-      return onFailure("invalid bluetooth address '" + faceuri.getMac() + "'");
+      return onFailure("invalid bluetooth address '" + faceUri.getMac() + "'");
     }
 
     // always success for now
     BOOST_ASSERT(faceUri.isCanonical());
     onSuccess(faceUri);
   }
-}
+};
 
 class EtherCanonizeProvider : public CanonizeProvider
 {

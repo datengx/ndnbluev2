@@ -16,7 +16,7 @@ BluetoothChannel::BluetoothChannel(const bluetooth::Endpoint& localEndpoint)
 
 {
   // setUri
-
+  setUri(FaceUri(m_localEndpoint));
 }
 
 BluetoothChannel::listen(const FaceCreatedCallback& onFaceCreated,
@@ -90,7 +90,7 @@ BluetoothChannel::createFace(bluetooth::bluetooth::socket&& socket,
     options.allowLocalFields = wantLocalFieldsEnabled;
     linkService->setOptions(options);
 
-    auto transport = make_unique<face::TcpTransport>(std::move(socket), persistency);
+    auto transport = make_unique<face::BluetoothTransport>(std::move(socket), persistency);
 
     face = make_shared<Face>(std::move(linkService), std::move(transport));
 

@@ -138,7 +138,7 @@ std::basic_ostream<Elem, Traits>& operator<<(
   std::basic_ostream<Elem, Traits>& os,
   const basic_endpoint<Procotol>& endpoint)
 {
-  os << "[ADD endpoint OSTREAM IMPLEMENTATION]";
+  os << "[" + endpoint.address() "]" + std::to_string(endpoint.channel());
   return os;
 }
 
