@@ -147,6 +147,7 @@ BluetoothChannel::handleAccept(const boost::system::error_code& error,
   }
 
   NFD_LOG_DEBUG("[" << m_localEndpoint << "] Connection from " << m_acceptSocket.remote_endpoint());
+  std::cout << "accept connection from: " << m_acceptSocket.remote_endpoint() << std::endl;
 
   createFace(std::move(m_acceptSocket), true, false, onFaceCreated);
 
@@ -187,7 +188,7 @@ BluetoothChannel::handleConnect(const boost::system::error_code& error,
   }
 
   NFD_LOG_DEBUG("[" << m_localEndpoint << "] Connected to " << socket->remote_endpoint());
-
+  std::cout << "init connection to: " << socket->remote_endpoint() << std::endl;
   createFace(std::move(*socket), false, wantLocalFieldsEnabled, onFaceCreated);
 }
 

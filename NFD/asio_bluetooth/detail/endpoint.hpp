@@ -36,11 +36,13 @@ public:
   {
     data_.bt.rc_family = AF_BLUETOOTH;
     data_.bt.rc_bdaddr = *BDADDR_ANY;
-    //uint8_t addr[6] = {0,0,0,0,0,0};
+    // char loc[18] = "00:00:00:00:00:00";
     //data_.bt.rc_bdaddr = (bdaddr_t) addr;
+    // str2ba( loc, &data_.bt.rc_bdaddr );
     data_.bt.rc_channel = (uint8_t) 1;
     // TODO can we figure out the BT mac of the local host?
     mac_ = "[BDADDR_ANY]";
+    // mac_ = std::string(loc);
   }
 
   endpoint(uint8_t channel)
@@ -48,11 +50,13 @@ public:
   {
     data_.bt.rc_family = AF_BLUETOOTH;
     data_.bt.rc_bdaddr = *BDADDR_ANY;
+    //char loc[18] = "00:00:00:00:00:00";
     //uint8_t addr[6] = {0,0,0,0,0,0};
     //data_.bt.rc_bdaddr = (bdaddr_t) addr;
     data_.bt.rc_channel = (uint8_t) channel;
     // TODO can we figure out the BT mac of the local host?
     mac_ = "[BDADDR_ANY]";
+    //mac_ = std::string(loc);
   }
 
   // Construct endpoint using bt MAC address and channel number
@@ -128,7 +132,7 @@ public:
   {
     return e1.address() < e2.address();
   }
-  
+
 
   // Set the underlying size of the endpoint in the native type
   void resize(std::size_t new_size)
@@ -150,7 +154,10 @@ public:
   std::string address() const
   {
     // TODO: convert directly from the address structure
-    return mac_;
+    char dest[18] = {0};
+    ba2str(&data_.bt.rc_bdaddr, dest);
+    std::string addr(dest);
+    return addr;
   }
 
   // Get the Bluetooth channel
