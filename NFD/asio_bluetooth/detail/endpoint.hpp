@@ -128,7 +128,7 @@ public:
   {
     return e1.address() < e2.address();
   }
-  
+
 
   // Set the underlying size of the endpoint in the native type
   void resize(std::size_t new_size)
@@ -150,7 +150,11 @@ public:
   std::string address() const
   {
     // TODO: convert directly from the address structure
-    return mac_;
+    //return mac_;
+    char dest[18] = {0};
+    ba2str(&data_.bt.rc_bdaddr, dest);
+    std::string addr(dest);
+    return addr;
   }
 
   // Get the Bluetooth channel
