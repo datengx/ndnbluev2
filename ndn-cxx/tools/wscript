@@ -22,7 +22,7 @@ def build(bld):
         bld(features=['cxx', 'cxxprogram'],
             target="../bin/%s" % name,
             source=bld.path.ant_glob(['%s/**/*.cpp' % name]),
-            use='ndn-cxx',
+            use='ndn-cxx BLUEZ',
             includes='%s' % name,
             )
 
