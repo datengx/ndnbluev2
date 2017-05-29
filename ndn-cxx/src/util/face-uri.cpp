@@ -214,7 +214,10 @@ FaceUri::operator==(const FaceUri& rhs) const
          m_scheme == rhs.m_scheme &&
          m_host == rhs.m_host &&
          m_port == rhs.m_port &&
-         m_path == rhs.m_path;
+         m_path == rhs.m_path &&
+         m_isBt == rhs.m_isBt &&
+         m_mac == rhs.m_mac &&
+         m_channel == rhs.m_channel;
 }
 
 bool
@@ -239,6 +242,7 @@ operator<<(std::ostream& os, const FaceUri& uri)
     os << "[" << uri.m_host << "]";
   }
   else if (uri.m_isBt) {
+    std::cout << "is bluetooth protocol" << std::endl;
     os << "[" << uri.m_mac << "]" << uri.m_channel;
   }
   else {
