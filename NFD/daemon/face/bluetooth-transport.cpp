@@ -18,9 +18,6 @@ BluetoothTransport::BluetoothTransport(protocol::socket&& socket, ndn::nfd::Face
   , m_remoteEndpoint(m_socket.remote_endpoint())
   , m_nextReconnectWait(s_initialReconnectWait)
 {
-  std::cout << "remote endpoint: " << m_socket.remote_endpoint().address() << std::endl;
-  std::cout << "local endpoint: " << m_socket.local_endpoint().address() << std::endl;
-
   this->setLocalUri(FaceUri(m_socket.local_endpoint()));
   this->setRemoteUri(FaceUri(m_socket.remote_endpoint()));
 
