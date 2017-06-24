@@ -62,7 +62,20 @@ BluetoothFactory::processConfig(OptionalConfigSection configSection,
   // default channel value
   uint8_t channel = 1;
 
-  // TODO: load config file
+  // load config file for Bluetooth
+  for (const auto& pair : *configSection) {
+    const std::string& key = pair.first;
+
+    if (key == "listen") {
+      wantListen = ConfigFile::parseYesNo(pair, "face_system.bluetooth");
+    }
+    else if (key == "channel") {
+      channel = ConfigFile::parseNumber<uint16_t>(pair, "face_system.bluetooth");
+    }
+    else {
+      BOOST_THROW_EXCEPTION(ConfigFile::Error("Unrecognized option face_system.bluetooth." + key));
+    }
+  }
 
   // if not dryrun
   if (!context.isDryRun) {
