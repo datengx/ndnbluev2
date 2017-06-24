@@ -36,13 +36,9 @@ public:
   {
     data_.bt.rc_family = AF_BLUETOOTH;
     data_.bt.rc_bdaddr = *BDADDR_ANY;
-    // char loc[18] = "00:00:00:00:00:00";
-    //data_.bt.rc_bdaddr = (bdaddr_t) addr;
-    // str2ba( loc, &data_.bt.rc_bdaddr );
     data_.bt.rc_channel = (uint8_t) 1;
     // TODO can we figure out the BT mac of the local host?
     mac_ = "[BDADDR_ANY]";
-    // mac_ = std::string(loc);
   }
 
   endpoint(uint8_t channel)
@@ -50,13 +46,9 @@ public:
   {
     data_.bt.rc_family = AF_BLUETOOTH;
     data_.bt.rc_bdaddr = *BDADDR_ANY;
-    //char loc[18] = "00:00:00:00:00:00";
-    //uint8_t addr[6] = {0,0,0,0,0,0};
-    //data_.bt.rc_bdaddr = (bdaddr_t) addr;
     data_.bt.rc_channel = (uint8_t) channel;
     // TODO can we figure out the BT mac of the local host?
     mac_ = "[BDADDR_ANY]";
-    //mac_ = std::string(loc);
   }
 
   // Construct endpoint using bt MAC address and channel number
