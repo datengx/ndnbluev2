@@ -115,7 +115,7 @@ CommandParser::parse(const std::vector<std::string>& tokens, ParseMode mode) con
   const std::string& verb = tokens.size() > 1 ? tokens[1] : "";
   size_t nameLen = std::min<size_t>(2, tokens.size());
 
-  std::cout << "noun: " << noun << " verb: " << verb << std::endl;
+  // std::cout << "noun: " << noun << " verb: " << verb << std::endl;
 
   auto i = m_commands.find({noun, verb});
   if (i == m_commands.end()) {

@@ -58,6 +58,7 @@
 
 #include <ndn-cxx/interest.hpp>
 #include <ndn-cxx/data.hpp>
+#include <ndn-cxx/face.hpp>
 #include <ndn-cxx/name.hpp>
 #include <ndn-cxx/encoding/block.hpp>
 #include <ndn-cxx/lp/nack.hpp>

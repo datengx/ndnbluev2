@@ -58,7 +58,7 @@ main(int argc, char** argv)
   ExecuteCommand execute;
 
   // @@@ tie the parser
-  std::cout << "@@@ tie the parser" << std::endl;
+  // std::cout << "@@@ tie the parser" << std::endl;
 
   try {
     // binding the tuple of objects to the variable listed in the std::tie(...)
@@ -71,7 +71,7 @@ main(int argc, char** argv)
   }
 
   // @@@ execute the command
-  std::cout << "@@@ execute the command" << std::endl;
+  // std::cout << "@@@ execute the command" << std::endl;
 
   try {
     Face face;

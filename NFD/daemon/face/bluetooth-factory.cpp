@@ -96,9 +96,7 @@ BluetoothFactory::createFace(const FaceUri& uri,
     onFailure(406, "Outgoing Bluetooth faces only support persistent persistency");
     return;
   }
-
-  std::cout << "@@ createFace - uri.getMac(): " << uri.getMac() << " uri.getChannel(): " << uri.getChannel() << std::endl;
-
+  // std::cout << "@@ createFace - uri.getMac(): " << uri.getMac() << " uri.getChannel(): " << uri.getChannel() << std::endl;
 
   boost::asio::bluetooth::bluetooth::endpoint endpoint(uri.getMac(),
                                (uint8_t)boost::lexical_cast<int>(uri.getChannel()));

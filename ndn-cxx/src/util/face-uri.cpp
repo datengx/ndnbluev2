@@ -87,7 +87,7 @@ FaceUri::parse(const std::string& uri)
   static const boost::regex v4MappedV6Exp("^\\[::ffff:(\\d+(?:\\.\\d+){3})\\](?:\\:(\\d+))?$");
   // pattern for IPv4/hostname/fd/ifname, with optional port number
   static const boost::regex v4HostExp("^([^:]+)(?:\\:(\\d+))?$");
-  // pattern for Bluetooth address in standard hex-digits-and-colons notation
+  // pattern for Bluetooth address in standard hex-digits-and-colons notation, like mac address
   static const boost::regex btExp("^\\[((?:[a-fA-F0-9]{1,2}\\:){5}(?:[a-fA-F0-9]{1,2}))\\](\\d+)$");
 
   // bluetooth scheme command
@@ -235,6 +235,7 @@ std::ostream&
 operator<<(std::ostream& os, const FaceUri& uri)
 {
   os << uri.m_scheme << "://";
+  // Bluetooth support
   if (uri.m_isBt) {
     os << "[" << uri.m_mac << "]" << uri.m_channel;
     return os;
@@ -468,7 +469,7 @@ public:
       return false;
     }
 
-    // TODO: Add real checking
+    // TODO: Add more sophisticated checking
     return true;
   }
 
